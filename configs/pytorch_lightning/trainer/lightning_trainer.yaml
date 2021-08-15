@@ -1,0 +1,13 @@
+# @package _global_
+trainer:
+  gpus: ${system.gpus}
+  accelerator: dp
+  checkpoint_callback: true
+  benchmark: ${system.cudnn.benchmark}
+  deterministic: ${system.cudnn.deterministic}
+  accumulate_grad_batches: 1
+  profiler: False
+  max_epochs: ${train.epochs}
+  gradient_clip_val: 0 # 0.5
+  num_sanity_val_steps: 2 # 0
+  weights_summary:

@@ -1,0 +1,24 @@
+# @package _global_
+defaults:
+ - data: detection
+ - augmentation: albumentations_detection
+ - model: detection/efficientdet
+ - loss: wrmsse
+ - train: train
+ - pytorch_lightning: trainer/lightning_trainer
+ - optimizer: adamw
+ - scheduler: cosinewarm #plateau
+ - callback: pytorch_lightning
+ - private: custom
+ - system: system
+
+framework: pytorch
+task: detection
+model_id: model_id
+
+hydra:
+  run:
+    dir: ./models/${model_id}/${now:%Y%m%d_%H_%M_%S}
+  sweep:
+    dir: ./models/
+    subdir: ${model_id}/${now:%Y%m%d_%H_%M_%S}

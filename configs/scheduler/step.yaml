@@ -1,0 +1,8 @@
+# @package _global_
+SCHEDULER:
+  class_name: torch.optim.lr_scheduler.StepLR
+  STEP: epoch
+  params:
+    step_size: 10
+    gamma: 0.9
+    last_epoch: -1

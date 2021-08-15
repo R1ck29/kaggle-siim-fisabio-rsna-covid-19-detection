@@ -1,0 +1,7 @@
+# @package _global_
+SCHEDULER:
+  class_name: torch.optim.lr_scheduler.CyclicLR
+  STEP: step
+  params:
+    base_lr: ${TRAIN.LR}
+    max_lr: 0.1

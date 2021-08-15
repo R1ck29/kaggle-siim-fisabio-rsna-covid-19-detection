@@ -1,0 +1,14 @@
+# @package _global_
+data:
+  data_id: my_data1
+  train_image_dir: data/${data.data_id}/raw/train
+  processed_csv_name: '_features.csv'
+  csv_path: data/${data.data_id}/split/train_folds_v2.csv
+  test_size: 0.2
+  n_fold: 5
+  image_id_col_name: image_id
+  fold_target_col: class_id
+
+dataset:
+  class_name: src.data.generator.detection.dataset.DatasetRetriever
+  cutmix: false

@@ -1,0 +1,12 @@
+# @package _global_
+SCHEDULER:
+  class_name: torch.optim.lr_scheduler.MultiStepLR
+  params:
+    milestones:
+    - 50
+    - 100
+    - 150
+    - 200
+    - 250
+    gamma: 0.1
+    last_epoch: -1

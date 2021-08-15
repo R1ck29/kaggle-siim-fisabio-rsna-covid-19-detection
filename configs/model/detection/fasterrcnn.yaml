@@ -1,0 +1,21 @@
+# @package _global_
+MODEL:
+  INPUT_SIZE: 1024
+  OUTPUT_SIZE: 1024
+  NUM_CLASSES: 2
+  MODEL_NAME: fasterrcnn_${MODEL.BACKBONE.NAME}_fpn
+  BACKBONE:
+    NAME: resnet50
+    class_name: src.models.modeling.detection.faster_rcnn.${MODEL.MODEL_NAME}
+    params:
+      pretrained: True
+      num_classes: 91
+      pretrained_backbone: True
+#      trainable_backbone_layers: 5
+
+  HEAD:
+    class_name: src.models.modeling.detection.faster_rcnn.faster_rcnn.FastRCNNPredictor
+    # params:
+    #   NUM_CLASSES: ${MODEL.NUM_CLASSES}
+#torchvision.models.detection.${model.config.params.model_name}
+#torchvision.models.detection.faster_rcnn.FastRCNNPredictor

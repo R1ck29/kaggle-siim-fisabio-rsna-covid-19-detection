@@ -1,0 +1,29 @@
+# @package _global_
+callback:
+  model_checkpoint:
+    class_name: pytorch_lightning.callbacks.ModelCheckpoint
+    params:
+      monitor: ${train.monitor}
+      save_top_k: 1
+      mode: ${train.mode}
+      save_weights_only: false
+      verbose: true
+
+  early_stopping:
+    flag: false
+    class_name: pytorch_lightning.callbacks.EarlyStopping
+    params:
+      monitor: ${train.monitor}
+      patience: 20
+      mode: ${train.mode}
+      verbose: true
+
+  logger:
+    tensorboard: true
+    comet:
+      flag: false
+      save_dir: logs/
+      workspace: r1ck29
+      project_name: wheat_v2
+      device: cuda
+    json: false

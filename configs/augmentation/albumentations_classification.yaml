@@ -1,0 +1,151 @@
+# @package _global_
+albumentations:
+  train:
+    augs:
+    - class_name: albumentations.RandomResizedCrop
+      params:
+        height: ${model.input_size.height}
+        width: ${model.input_size.width}
+    - class_name: albumentations.Transpose
+      params:
+        p: 0.5
+    - class_name: albumentations.HorizontalFlip
+      params:
+        p: 0.5
+    - class_name: albumentations.VerticalFlip
+      params:
+        p: 0.5
+    - class_name: albumentations.ShiftScaleRotate
+      params:
+        p: 0.5
+    - class_name: albumentations.HueSaturationValue
+      params:
+        hue_shift_limit:
+        - -0.2
+        - 0.2
+        sat_shift_limit: 
+        - -0.2
+        - 0.2
+        val_shift_limit: 
+        - -0.2
+        - 0.2
+        p: 0.5
+    - class_name: albumentations.RandomBrightnessContrast
+      params:
+        brightness_limit:
+        - -0.1
+        - 0.1
+        contrast_limit:
+        - -0.1
+        - 0.1
+        p: 0.5
+    - class_name: albumentations.Normalize
+      params:
+        mean:
+        - 0.485
+        - 0.456
+        - 0.406
+        std:
+        - 0.229
+        - 0.224
+        - 0.225
+        max_pixel_value:
+        - 255.0
+        p: 1.0
+    - class_name: albumentations.CoarseDropout
+      params:
+        p: 0.5
+    - class_name: albumentations.Cutout
+      params:
+        p: 0.5
+    - class_name: albumentations.pytorch.transforms.ToTensorV2
+      params:
+        always_apply: true
+        p: 1.0
+
+  valid:
+    augs:
+    - class_name: albumentations.CenterCrop
+      params:
+        height: ${model.input_size.height}
+        width: ${model.input_size.width}
+        p: 1.0
+    - class_name: albumentations.Resize
+      params:
+        height: ${model.input_size.height}
+        width: ${model.input_size.width}
+    - class_name: albumentations.Normalize
+      params:
+        mean:
+        - 0.485
+        - 0.456
+        - 0.406
+        std:
+        - 0.229
+        - 0.224
+        - 0.225
+        max_pixel_value:
+        - 255.0
+        p: 1.0
+    - class_name: albumentations.pytorch.transforms.ToTensorV2
+      params:
+        always_apply: true
+        p: 1.0
+
+        
+  test:
+    augs:
+    - class_name: albumentations.RandomResizedCrop
+      params:
+        height: ${model.input_size.height}
+        width: ${model.input_size.width}
+    - class_name: albumentations.Transpose
+      params:
+        p: 0.5
+    - class_name: albumentations.HorizontalFlip
+      params:
+        p: 0.5
+    - class_name: albumentations.VerticalFlip
+      params:
+        p: 0.5
+    - class_name: albumentations.ShiftScaleRotate
+      params:
+        p: 0.5
+    - class_name: albumentations.HueSaturationValue
+      params:
+        hue_shift_limit:
+        - -0.2
+        - 0.2
+        sat_shift_limit: 
+        - -0.2
+        - 0.2
+        val_shift_limit: 
+        - -0.2
+        - 0.2
+        p: 0.5
+    - class_name: albumentations.RandomBrightnessContrast
+      params:
+        brightness_limit:
+        - -0.1
+        - 0.1
+        contrast_limit:
+        - -0.1
+        - 0.1
+        p: 0.5
+    - class_name: albumentations.Normalize
+      params:
+        mean:
+        - 0.485
+        - 0.456
+        - 0.406
+        std:
+        - 0.229
+        - 0.224
+        - 0.225
+        max_pixel_value:
+        - 255.0
+        p: 1.0
+    - class_name: albumentations.pytorch.transforms.ToTensorV2
+      params:
+        always_apply: true
+        p: 1.0

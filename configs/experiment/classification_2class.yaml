@@ -1,0 +1,73 @@
+# @package _global_
+augmentation:
+  framework: albumentations_classification
+
+system:
+  gpus: '0'
+  seed: 719
+  num_workers: 4
+  cudnn: 
+    enabled: true
+    benchmark: false
+    deterministic: true
+
+data:
+  data_id: siimcovid19-512-img-png-600-study-png
+  num_classes: 2
+  train_image_dir: input/${data.data_id}/image
+  csv_path: input/siim_covid19_train/train_image_level_2class.csv
+  n_fold: 5
+  image_id_col_name: image_id
+  fold_target_col: class_id
+
+dataset:
+  class_name: src.data.generator.classification.dataset.Attrdataset
+  cutmix: false
+
+train:
+  epochs: 100
+  lr: 1e-6
+  batch_size: 14
+  val_batch_size: 32
+  monitor: val_score
+  mode: "max"
+  debug: false
+
+trainer:
+  accumulate_grad_batches: 2
+
+scheduler:
+  class_name: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+  step: step
+  monitor: ${train.monitor}
+  params:
+    T_0: 10 #150
+    T_mult: 1 #2 #3
+    eta_min: 1e-6
+
+callback: 
+  logger:
+    comet:
+      flag: true
+      project_name: siim-covid19-detection
+  early_stopping:
+    flag: true
+    params:
+      patience: 15
+
+framework: pytorch
+task: classification
+model_id: binary_cls_tf_efficientnetb4_ns
+
+test:
+  batch_size: 32
+  test_iamge_dir: input/${data.data_id}/study
+  test_csv_path: input/${data.data_id}/sample_submission.csv
+  visualize_result: true
+  save_all_images: false
+  threshold: 0.5
+  find_best_threshold: false
+  valid_score_csv_name: valid_score.csv
+  best_weight_type: val_score
+  valid_prediction: true
+  tta: 0

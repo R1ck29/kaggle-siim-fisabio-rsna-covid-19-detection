@@ -1,0 +1,89 @@
+# @package _global_
+augmentation:
+  framework: albumentations_detection
+
+system:
+  gpus: '0'
+  seed: 42
+  num_workers: 4
+  cudnn: 
+    enabled: true
+    benchmark: false
+    deterministic: true
+
+data:
+  data_id: train_eq_hist_orig_png #siimcovid19-512-img-png-600-study-png
+  num_classes: 1
+  train_image_dir: input/${data.data_id} #/image #input/train 
+  csv_path: input/detection_train_fold.csv # train_image_level_2class
+  n_fold: 5
+  image_id_col_name: image_id
+  fold_target_col: class_id
+
+dataset:
+  class_name: src.detection.data.DatasetRetriever
+  cutmix: false
+
+model:
+  input_size: 512
+  output_size: 512
+  num_classes: 1
+  base_name: efficientnetv2}_l_in21ft1k
+  model_name: tf_${model.base_name} #l_in21ft1k #m_in21ft1k
+
+train:
+  epochs: 200
+  lr: 0.0002
+  batch_size: 2
+  val_batch_size: 2
+  monitor: valid_loss
+  mode: "min"
+  debug: false
+
+trainer:
+  accumulate_grad_batches: 1
+
+scheduler:
+  class_name: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+  step: step
+  monitor: ${train.monitor}
+  params:
+    T_0: 10 #150
+    T_mult: 1 #2 #3
+    eta_min: 1e-6
+
+callback: 
+  early_stopping:
+    flag: true
+    class_name: pytorch_lightning.callbacks.EarlyStopping
+    params:
+      monitor: ${train.monitor}
+      patience: 15
+      mode: ${train.mode}
+      verbose: true
+  logger:
+    tensorboard: false
+    comet:
+      flag: false
+      save_dir: logs/
+      workspace: r1ck29
+      project_name: siim-covid19-detection
+      device: cuda
+    json: false
+
+framework: pytorch
+task: classification
+model_id: detection_tf_efficientnetv2_m
+
+test:
+  batch_size: 32
+  test_iamge_dir: input/${data.data_id}/study
+  test_csv_path: input/${data.data_id}/sample_submission.csv
+  visualize_result: true
+  save_all_images: false
+  threshold: 0.5
+  find_best_threshold: false
+  valid_score_csv_name: valid_score.csv
+  best_weight_type: val_score
+  valid_prediction: true
+  tta: 0

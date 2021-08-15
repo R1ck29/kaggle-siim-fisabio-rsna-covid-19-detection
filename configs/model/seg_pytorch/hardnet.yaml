@@ -1,0 +1,6 @@
+# @package _global_
+MODEL:
+    arch: hardnet
+    pretrain: ../../../src/models/modeling/seg_pytorch/hardnet_petite_base.pth
+    fuse_bn: True
+    n_classes: 3

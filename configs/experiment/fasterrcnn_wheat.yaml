@@ -1,0 +1,70 @@
+# @package _global_
+augmentaion:
+  framework: albumentations
+
+system:
+  gpus: '3'
+  seed: 666
+  CUDNN: 
+    ENABLED: true
+    BENCHMARK: false
+    DETERMINISTIC: true
+  
+data: 
+  data_id: my_data1 #open_images_person #my_data1
+  processed_csv_name: '_features.csv'
+  csv_path: data/${data.data_id}/split/train_folds_coco.csv #train_folds_v2.csv
+  RANDOM_KFOLD: False
+  format: coco
+  n_fold: 5
+  EXTRACT_ONE_CLASS: false
+  image_id_col_name: image_id #ImageID
+  fold_target_col: stratify_group #count
+  remove_large_bboxes: true
+  max_bbox_size: 200000
+
+dataset:
+  class_name: src.data.generator.detection.dataset.FasterRCNNDataset
+  cutmix: false
+
+TRAIN:
+  EPOCHS: 100
+  LR: 0.0002
+  BATCH_SIZE: 4
+  MONITOR: val_score
+  MODE: "max"
+  DEBUG: false
+
+callback: 
+  logger:
+    commet:
+      flag: false
+      project_name: open_images_person
+  early_stopping:
+    flag: true
+
+SCHEDULER:
+  class_name: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+  STEP: step
+  MONITOR: ${TRAIN.MONITOR}
+  params:
+    T_0: 150
+    T_mult: 2 #3
+    eta_min: 0
+framework: pytorch
+task: detection
+model_id: fasterrcnn_wheat
+TEST_ID: test1
+
+TEST:
+  SAVE_ALL_IMAGES: false
+  FIND_BEST_THR: true
+  BATCH_SIZE: 2
+  DETECTION_THRESHOLD: 0.2
+  TEST_IMAGE_DIR: data/${data.data_id}/raw/test
+  TEST_csv_path: data/${data.data_id}/raw/test_submission.csv
+  VISUALIZE_RESULTS: true
+  # TEST_IMAGE_DIR: data/${data.data_id}/raw/person/images
+  # TEST_csv_path: data/${data.data_id}/split/test_person_v3.csv # for train 2_1, use v3
+  # TEST_IMAGE_DIR: data/${data.data_id}/raw/test
+  # TEST_csv_path: data/${data.data_id}/raw/test_submission.csv

@@ -1,0 +1,1 @@
+python -m src.preprocess.detection.preprocess_efficientdet

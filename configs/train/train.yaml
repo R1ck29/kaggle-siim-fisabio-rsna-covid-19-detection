@@ -1,0 +1,10 @@
+
+# @package _global_
+train:
+  epochs: 1000
+  lr: 0.02
+  batch_size: 4
+  val_batch_size: 32
+  monitor: val_loss
+  mode: "min"
+  debug: false

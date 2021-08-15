@@ -1,0 +1,20 @@
+# @package _global_
+TEST:
+  BATCH_SIZE: 2
+  TEST_IMAGE_DIR: data/${data.data_id}/raw/test
+  TEST_csv_path: data/${data.data_id}/raw/test_submission.csv
+  VISUALIZE_RESULTS: false
+  VAL_PRED_IMG_DIR: pred_images/validation/
+  TEST_PRED_IMG_DIR: pred_images/test/
+  SAVE_ALL_IMAGES: false
+  DETECTION_THRESHOLD: 0.29
+  find_best_threshold: false
+  ENSEMBLE_BOXES: 
+    NAME: WBF # WBF NMW SoftNMS NMS
+    WEIGHTS:
+    SIGMA: 0.5
+    THRESH: 0.001
+    IOU_THR: 0.4
+    SKIP_BOX_THR: 0.45
+  BEST_THR_CSV_NAME: best_score_threshold.csv
+  TEST_SCORE_CSV_NAME: test_score.csv

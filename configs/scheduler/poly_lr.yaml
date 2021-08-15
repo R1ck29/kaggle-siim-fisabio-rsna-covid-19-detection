@@ -1,0 +1,5 @@
+# @package _global_
+SCHEDULER:
+    class_name: 'poly_lr'
+    params:
+        max_iter: ${TRAIN.EPOCHS}

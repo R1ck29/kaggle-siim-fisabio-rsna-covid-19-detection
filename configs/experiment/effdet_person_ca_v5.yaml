@@ -1,0 +1,61 @@
+# @package _global_
+augmentaion:
+  framework: albumentations
+
+system:
+  gpus: '2'
+  seed: 666
+  CUDNN: 
+    ENABLED: true
+    BENCHMARK: false
+    DETERMINISTIC: true
+
+data:
+  data_id: open_images_person
+  train_image_dir: data/${data.data_id}/raw/person/images
+  csv_path: data/${data.data_id}/split/train_folds.csv
+  n_fold: 1
+  format: pascal_voc
+  image_id_col_name: ImageID
+
+MODEL:
+  INPUT_SIZE: 640
+  OUTPUT_SIZE: 640
+  NUM_CLASSES: 1
+  BASE_NAME: efficientdet_d4
+
+TRAIN:
+  EPOCHS: 100
+  LR: 0.0002
+  BATCH_SIZE: 4
+  DEBUG: false
+
+callback: 
+  logger:
+    commet:
+      flag: false
+      project_name: open_images_person
+  early_stopping:
+    flag: true
+
+SCHEDULER:
+  class_name: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+  STEP: step
+  MONITOR: ${TRAIN.MONITOR}
+  params:
+    T_0: 150
+    T_mult: 2 #3
+    eta_min: 0
+
+framework: pytorch
+task: detection
+model_id: effdet_person_ca_v5 # update
+
+TEST:
+  SAVE_ALL_IMAGES: false
+  FIND_BEST_THR: true
+  BATCH_SIZE: 1
+  DETECTION_THRESHOLD: 0.2
+  TEST_IMAGE_DIR: data/${data.data_id}/raw/person/images
+  TEST_csv_path: data/${data.data_id}/split/test_person_v3.csv # for train 2_1, use v3
+  VISUALIZE_RESULTS: true

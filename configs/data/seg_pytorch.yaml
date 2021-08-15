@@ -1,0 +1,9 @@
+data:
+  data_id: cvat
+  csv_path: split01
+  
+  # cvat or cityscapes
+  dataset: cvat
+  n_fold: 1
+  
+  

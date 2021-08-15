@@ -1,0 +1,26 @@
+# @package _global_
+model:
+  input_size: 512
+  output_size: 512
+  num_classes: 1
+  base_name: efficientnetv2_l_in21ft1k
+  model_name: tf_${model.base_name} #m_in21ft1k
+  config:
+    class_name: src.models.modeling.detection.effdet.get_efficientdet_config
+    params:
+  backbone:
+    class_name: src.models.modeling.detection.effdet.EfficientDet
+    params:
+      weight_path: models/pretrained_models/efficientdet/ #pretrained_model_dir
+      pretrained_backbone: False #False
+      
+  head:
+    class_name: src.models.modeling.detection.effdet.efficientdet.headNet
+    params:
+      num_classes: ${model.num_classes}
+
+  train:
+    class_name: src.models.modeling.detection.effdet.DetBenchtrain
+
+  test:
+    class_name: src.models.modeling.detection.effdet.DetBenchPredict

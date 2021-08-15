@@ -1,0 +1,49 @@
+# @package _global_
+augmentaion:
+  framework: albumentations
+  albumentations:
+    test:
+      path: configs/augmentation/albumentations/test_augs_no_gt.yaml
+
+system:
+  gpus: '1'
+  seed: 666
+  CUDNN: 
+    ENABLED: true
+    BENCHMARK: false
+    DETERMINISTIC: true
+  
+data: 
+  data_id: my_data1
+  processed_csv_name: '_features.csv'
+  csv_path: data/${data.data_id}/split/train_folds_effdet_wheat_v2.csv
+  RANDOM_KFOLD: False
+  n_fold: 5
+  fold_target_col: stratify_group
+  remove_large_bboxes: true
+  max_bbox_size: 200000
+
+TRAIN:
+  EPOCHS: 3
+  LR: 0.0002
+  BATCH_SIZE: 4
+  DEBUG: false
+
+callback: 
+  logger:
+    commet:
+      flag: false
+  early_stopping:
+    flag: true
+
+framework: pytorch
+task: detection
+model_id: effdet_wheat
+TEST_ID: test1
+
+TEST:
+  SAVE_ALL_IMAGES: false
+  FIND_BEST_THR: true
+  BATCH_SIZE: 2
+  TEST_IMAGE_DIR: data/${data.data_id}/raw/test
+  TEST_csv_path: data/${data.data_id}/raw/test_submission.csv
