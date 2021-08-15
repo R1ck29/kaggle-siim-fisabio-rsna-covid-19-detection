@@ -1,1 +1,1 @@
-# kaggle-siim-fisabio-rsna-covid-19-detection
+# Kaggle SIIM FISABIO-RSNA COVID-19 Detection

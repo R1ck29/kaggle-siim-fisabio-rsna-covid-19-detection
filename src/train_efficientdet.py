@@ -1,6 +1,9 @@
 # get_ipython().system('pip install git+https://github.com/alexhock/object-detection-metrics')
+import logging
+import os
 from typing import List
 
+import hydra
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -8,19 +11,17 @@ import torch
 from ensemble_boxes import ensemble_boxes_wbf
 # from fastcore.basics import patch
 from fastcore.dispatch import typedispatch
+from hydra.core.hydra_config import HydraConfig
 # from matplotlib import patches
 from objdetecteval.metrics.coco_metrics import get_coco_stats
 from pytorch_lightning import LightningModule, Trainer
 from pytorch_lightning.core.decorators import auto_move_data
 
-from src.detection.data import (EfficientDetDataModule,
-                                draw_pascal_voc_bboxes, get_train_transforms, get_valid_transforms)
+from src.detection.data import (EfficientDetDataModule, draw_pascal_voc_bboxes,
+                                get_train_transforms, get_valid_transforms)
 from src.models.detection.efficientdet.efficientdet import create_model
-from src.utils.common import load_obj, seed_everything, get_callback, save_model
-import os
-import hydra
-from hydra.core.hydra_config import HydraConfig
-import logging
+from src.utils.common import (get_callback, load_obj, save_model,
+                              seed_everything)
 
 
 # ## Define the training loop
@@ -449,10 +450,6 @@ def main(cfg):
     os.makedirs(model_path, exist_ok=True)
 
     seed_everything(cfg.system.seed)
-    
-    # output_path = os.getcwd() + '/weights'
-    # if not os.path.exists(output_path):
-    #     os.makedirs(output_path, exist_ok=True)
 
     df_folds = pd.read_csv(hydra.utils.to_absolute_path(cfg.data.csv_path))
     df = pd.read_csv(hydra.utils.to_absolute_path('input/detection_train.csv'))
@@ -471,12 +468,8 @@ def main(cfg):
 
         #lr_logger
         trainer = Trainer(logger=loggers,
-                        # early_stop_callback=early_stopping,
-                        # checkpoint_callback=model_checkpoint,
-                        # callbacks=[lr_logger],
                         callbacks=[early_stopping, model_checkpoint],
                         **cfg.trainer)
-            #gpus=[0], max_epochs=epochs, num_sanity_val_steps=1)
 
         trainer.fit(model, dm)
         # We can save this like a regular PyTorch model
